@@ -1,17 +1,14 @@
 #!/bin/bash
-if test -z "$1"; then
-    LIST=('filterinto.com')
-else
-    LIST=($1)
-fi
+WEBDIR="$1"
+LIST=('filterinto.com' 'www.filterinto.com')
 LED_LIST=()
 WWW_ROOT=/usr/share/nginx/html
 for domain in ${LIST[@]};do
     docker run \
         --rm \
-        -v $(pwd)/nginx/conf.crt:/etc/letsencrypt \
-        -v $(pwd)/logs/letsencrypt:/var/log/letsencrypt \
-        -v $(pwd)/nginx/html:${WWW_ROOT} \
+        -v ${WEBDIR}/nginx/conf.crt:/etc/letsencrypt \
+        -v ${WEBDIR}/logs/letsencrypt:/var/log/letsencrypt \
+        -v ${WEBDIR}/nginx/html:${WWW_ROOT} \
         certbot:1.0 \
         certbot certonly --verbose --noninteractive --quiet --agree-tos \
         --webroot -w ${WWW_ROOT} \
